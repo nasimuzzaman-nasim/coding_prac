@@ -5,6 +5,7 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 
 from product.models import Variant, Product, ProductVariant, ProductVariantPrice, ProductImage
+from product.helper import make_product
 
 
 class CreateProductView(generic.TemplateView):
@@ -27,33 +28,44 @@ class CreateProductView(generic.TemplateView):
             product = Product(title=data['title'], sku=data['sku'], description=data['description'])
             product.save()
 
-            for image_url in data['product_image']:
-                product_image = ProductImage(product=product, file_path=image_url)
-                product_image.save()
+            response = make_product(data, product)
 
-            for product_variants in data['product_variant']:
-                variant = Variant.objects.get(id=product_variants['option'])
-                for product_variant_title in product_variants['tags']:
-                    product_variant_obj = ProductVariant(variant_title=product_variant_title, variant=variant, product=product)
-                    product_variant_obj.save()
-
-            for product_variant_price in data['product_variant_prices']:
-                title_list = product_variant_price['title'].split('/')
-                product_variant_price_obj = ProductVariantPrice(product=product, price=product_variant_price['price'], stock=product_variant_price['stock'])
-
-                product_variant_one = ProductVariant.objects.filter(product=product, variant_title=title_list[0]).first()
-                product_variant_price_obj.product_variant_one = product_variant_one
-                product_variant_two = ProductVariant.objects.filter(product=product, variant_title=title_list[1]).first()
-                product_variant_price_obj.product_variant_two = product_variant_two
-                product_variant_three = ProductVariant.objects.filter(product=product, variant_title=title_list[2]).first()
-                product_variant_price_obj.product_variant_three = product_variant_three
-
-                product_variant_price_obj.save()
-
+        except Exception as e:
             response = {
-                'status': 201,
-                'detail': 'Product Created Successfully!'
+                'status': 400,
+                'detail': str(e.args[0])
             }
+
+        return JsonResponse(response, safe=False)
+
+
+class UpdateProductView(generic.TemplateView):
+    template_name = 'products/update.html'
+
+    @csrf_exempt
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_context_data(self, pk, **kwargs):
+        context = super(UpdateProductView, self).get_context_data(**kwargs)
+        variants = Variant.objects.filter(active=True).values('id', 'title')
+        context['variants'] = list(variants.all())
+        context['product_id'] = pk
+        return context
+
+    def post(self, request, pk):
+        try:
+            data = json.loads(request.body)
+            product = Product.objects.get(id=pk)
+            product.title = data['title']
+            product.sku = data['sku']
+            product.description = data['description']
+            product.save()
+
+            product.productvariantprice_set.all().delete()
+            product.productimage_set.all().delete()
+
+            response = make_product(data, product)
         except Exception as e:
             response = {
                 'status': 400,

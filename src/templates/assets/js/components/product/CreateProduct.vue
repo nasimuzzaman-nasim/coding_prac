@@ -152,6 +152,7 @@ export default {
     checkVariant() {
       let tags = [];
       this.product_variant_prices = [];
+      console.log(this.product_variant)
       this.product_variant.filter((item) => {
         tags.push(item.tags);
       })
@@ -188,6 +189,8 @@ export default {
         product_variant: this.product_variant,
         product_variant_prices: this.product_variant_prices
       }
+      console.log(this.product_variant)
+      console.log(this.product_variant_prices)
 
 
       axios.post('/product/create/', product).then(response => {
