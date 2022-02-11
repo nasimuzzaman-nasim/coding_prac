@@ -18,9 +18,13 @@
                 <select name="variant" id="" class="form-control">
                     <option selected disabled>--Select A Variant--</option>
                     {% for variant in variants %}
-                        {% ifchanged variant.variant_title %}
-                            <option {% if variant.id|slugify == request.GET.variant %} selected {% endif %} value="{{ variant.id }}">{{ variant.variant_title }}
-                        {% endifchanged %}
+                        <optgroup label="{{ variant.title }}">
+                            {% for product_variant in variant.productvariant_set.all|dictsort:'variant_title' %}
+                                {% ifchanged product_variant.variant_title %}
+                                    <option {% if product_variant.id|slugify == request.GET.variant %} selected {% endif %} value="{{ product_variant.id }}">{{ product_variant.variant_title }}
+                                {% endifchanged %}
+                            {% endfor %}
+                        </optgroup>
                     {% endfor %}
 
                 </select>

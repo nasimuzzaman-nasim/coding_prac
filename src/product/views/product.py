@@ -22,8 +22,7 @@ class ProductListView(generic.list.ListView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(ProductListView, self).get_context_data(**kwargs)
-        # DISTINCT ON fields is not supported by this database backend
-        context['variants'] = list(ProductVariant.objects.values('id', 'variant_title').order_by('variant_title'))
+        context['variants'] = Variant.objects.all()
         return context
 
     def get_queryset(self):
@@ -33,12 +32,15 @@ class ProductListView(generic.list.ListView):
         price_from = self.request.GET.get('price_from')
         price_to = self.request.GET.get('price_to')
         date = self.request.GET.get('date')
+        variant = self.request.GET.get('variant')
 
         if title:
             query['title__icontains'] = title
         query['productvariantprice__price__range'] = [price_from if price_from else 0, price_to if price_to else math.inf]
         if date:
             query['created_at__date'] = date
+        if variant:
+            query['productvariant__id'] = variant
         return qs.filter(**query).distinct()
 
 
