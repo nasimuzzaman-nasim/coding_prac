@@ -73,7 +73,7 @@
                         <dl class="row mb-0" style="height: 80px; overflow: hidden" id="variant{{ forloop.counter }}">
                             {% for product_variant_price in product.productvariantprice_set.all %}
                                 <dt class="col-sm-3 pb-0">
-                                    {{ product_variant_price.product_variant_one.variant_title }}/ {{ product_variant_price.product_variant_two.variant_title }}/ {{ product_variant_price.product_variant_three.variant_title }}
+                                    {{ product_variant_price.product_variant_one.variant_title }} / {{ product_variant_price.product_variant_two.variant_title }} / {{ product_variant_price.product_variant_three.variant_title }}
                                 </dt>
                                 <dd class="col-sm-9">
                                     <dl class="row mb-0">
@@ -115,7 +115,7 @@
                   <ul class="pagination">
                     {% if page_obj.has_previous %}
                       <li class="paginate_button page-item previous">
-                          <a class="page-link" href="?page={{ page_obj.previous_page_number }}">&lsaquo;</a>
+                          <a class="page-link" href="?title={{ request.GET.title }}&variant={{ request.GET.variant }}&price_from={{ request.GET.price_from }}&price_to={{ request.GET.price_to }}&date={{ request.GET.date }}&page={{ page_obj.previous_page_number }}">&lsaquo;</a>
                       </li>
                     {% else %}
                       <li class="paginate_button page-item disabled"><span class="page-link">&lsaquo;</span></li>
@@ -125,11 +125,11 @@
                       {% if page_obj.number == i %}
                         <li class="active paginate_button page-item"><span class="page-link">{{ i }} <span class="sr-only">(current)</span></span></li>
                       {% else %}
-                        <li class="paginate_button page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+                        <li class="paginate_button page-item"><a class="page-link" href="?title={{ request.GET.title }}&variant={{ request.GET.variant }}&price_from={{ request.GET.price_from }}&price_to={{ request.GET.price_to }}&date={{ request.GET.date }}&page={{ i }}">{{ i }}</a></li>
                       {% endif %}
                     {% endfor %}
                     {% if page_obj.has_next %}
-                      <li class="paginate_button page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">&rsaquo;</a></li>
+                      <li class="paginate_button page-item"><a class="page-link" href="?title={{ request.GET.title }}&variant={{ request.GET.variant }}&price_from={{ request.GET.price_from }}&price_to={{ request.GET.price_to }}&date={{ request.GET.date }}&page={{ page_obj.next_page_number }}">&rsaquo;</a></li>
                     {% else %}
                       <li  class="paginate_button page-item disabled"><span class="page-link">&rsaquo;</span></li>
                     {% endif %}
