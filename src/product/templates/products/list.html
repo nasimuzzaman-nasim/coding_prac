@@ -110,7 +110,7 @@
             <div class="col-md-6">
                 <p>Showing {{ page_obj.start_index }} to {{ page_obj.end_index }} out of {{ page_obj.paginator.count }}</p>
             </div>
-            <div class="col-md-2">
+            <div class="col-md-6">
                 {% if page_obj.has_other_pages %}
                   <ul class="pagination">
                     {% if page_obj.has_previous %}
