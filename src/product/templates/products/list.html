@@ -1,5 +1,4 @@
 {% extends 'backend/base.html' %}
-
 {% block title %} Product List {% endblock %}
 
 {% block content %}
@@ -55,50 +54,30 @@
                 </thead>
 
                 <tbody>
-                <tr>
-                    <td>1</td>
-                    <td>T-Shirt <br> Created at : 25-Aug-2020</td>
-                    <td>Quality product in low cost</td>
+
+                {% for product in object_list %}
+                    <tr>
+                    <td>{{ product.id }}</td>
+                    <td>{{ product.title }} <br> Created at : {{ product.created_at.date }}</td>
+                    <td>{{ product.description }}</td>
                     <td>
-                        <dl class="row mb-0" style="height: 80px; overflow: hidden" id="variant">
+                        <dl class="row mb-0" style="height: 80px; overflow: hidden" id="variant{{ forloop.counter }}">
+                            {% for product_variant_price in product.productvariantprice_set.all %}
                                 <dt class="col-sm-3 pb-0">
-                                    XL/ Black/ Full
+                                    {{ product_variant_price.product_variant_one.variant_title }}/ {{ product_variant_price.product_variant_two.variant_title }}/ {{ product_variant_price.product_variant_three.variant_title }}
                                 </dt>
                                 <dd class="col-sm-9">
                                     <dl class="row mb-0">
-                                        <dd class="col-sm-4 pb-0">Price : 200.0</dd>
-                                        <dd class="col-sm-8 pb-0">InStock : 50.</dd>
+                                        <dd class="col-sm-4 pb-0">Price : {{ product_variant_price.price|floatformat:1 }}</dd>
+                                        <dd class="col-sm-8 pb-0">InStock : {{ product_variant_price.stock|floatformat:0 }}.</dd>
                                     </dl>
                                 </dd>
-                                <dt class="col-sm-3 pb-0">
-                                    XL/ Black/ Half
-                                </dt>
-                                <dd class="col-sm-9">
-                                    <dl class="row mb-0">
-                                        <dd class="col-sm-4 pb-0">Price : 200.0</dd>
-                                        <dd class="col-sm-8 pb-0">InStock : 50.</dd>
-                                    </dl>
-                                </dd>
-                                <dt class="col-sm-3 pb-0">
-                                    L/ Black/ Full
-                                </dt>
-                                <dd class="col-sm-9">
-                                    <dl class="row mb-0">
-                                        <dd class="col-sm-4 pb-0">Price : 200.0</dd>
-                                        <dd class="col-sm-8 pb-0">InStock : 50.</dd>
-                                    </dl>
-                                </dd>
-                                <dt class="col-sm-3 pb-0">
-                                    L/ Black/ Half
-                                </dt>
-                                <dd class="col-sm-9">
-                                    <dl class="row mb-0">
-                                        <dd class="col-sm-4 pb-0">Price : 200.0</dd>
-                                        <dd class="col-sm-8 pb-0">InStock : 50.</dd>
-                                    </dl>
-                                </dd>
+                                {% endfor %}
+
+
+
                             </dl>
-                        <button onclick="$('#variant').toggleClass('h-auto')" class="btn btn-sm btn-link">Show more
+                        <button onclick="$('#variant{{ forloop.counter }}').toggleClass('h-auto')" class="btn btn-sm btn-link">Show more
                         </button>
                     </td>
                     <td>
@@ -107,6 +86,7 @@
                         </div>
                     </td>
                 </tr>
+                {% endfor %}
                 </tbody>
 
             </table>
