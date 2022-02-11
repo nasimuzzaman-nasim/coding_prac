@@ -86,8 +86,10 @@
 
 
                             </dl>
+                    {% if product.productvariantprice_set.all|length > 2 %}
                         <button onclick="$('#variant{{ forloop.counter }}').toggleClass('h-auto')" class="btn btn-sm btn-link">Show more
                         </button>
+                    {% endif %}
                     </td>
                     <td>
                         <div class="btn-group btn-group-sm">
