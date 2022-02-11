@@ -17,4 +17,5 @@ class CreateProductView(generic.TemplateView):
 class ProductListView(generic.list.ListView):
     model = Product
     template_name = 'products/list.html'
+    paginate_by = 2
 
